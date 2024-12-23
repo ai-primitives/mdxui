@@ -13,6 +13,8 @@
   "dependencies": {
     "@mdxui/shared": "workspace:*",
     "@mdxui/types": "workspace:*",
+    "ai-functions": "^0.3.0",
+    "mdxld": "^1.0.1",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@theguild/remark-mermaid": "^0.2.0",
+    "ai-functions": "^0.3.0",
+    "mdxld": "^1.0.1",
     "next": "^15.0.2",
     "nextra": "^4.0.0-app-router.34",
     "nextra-theme-docs": "^4.0.0-app-router.34",
