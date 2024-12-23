@@ -19,7 +19,9 @@
       "preset": "angular"
     }],
     ["@semantic-release/npm", {
-      "pkgRoot": "packages/*"
+      "pkgRoot": "packages/*",
+      "_npmPath": "pnpm",
+      "npmPublish": true
     }],
     ["@semantic-release/github", {
       "successComment": false,

@@ -50,43 +50,19 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
           
-          # Create temporary publish config
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          # Create .npmrc for publishing
+          cat << EOF > .npmrc
+          //registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}
+          registry=https://registry.npmjs.org/
+          always-auth=true
+          EOF
           
+          # Run semantic-release for each package
           for dir in packages/*; do
             if [ -f "$dir/package.json" ]; then
-              echo "Processing $dir"
+              echo "Publishing $dir"
               cd $dir
-              
-              # Create a temporary package.json for publishing
-              cp package.json package.json.orig
-              
-              # Convert workspace dependencies to * using node
-              node -e '
-                const pkg = require("./package.json");
-                const convertDeps = deps => {
-                  if (!deps) return {};
-                  return Object.fromEntries(
-                    Object.entries(deps).map(([key, value]) => [
-                      key,
-                      value.startsWith("workspace:") ? "*" : value
-                    ])
-                  );
-                };
-                pkg.dependencies = convertDeps(pkg.dependencies);
-                pkg.devDependencies = convertDeps(pkg.devDependencies);
-                require("fs").writeFileSync("package.json", JSON.stringify(pkg, null, 2));
-              '
-              
-              # Run semantic release with the modified package.json
               npx semantic-release
-              
-              # Restore original package.json
-              mv package.json.orig package.json
-              
               cd ../..
             fi
           done
-          
-          # Clean up
-          rm -f .npmrc
