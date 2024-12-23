@@ -119,6 +119,7 @@ jobs:
               # Convert workspace dependencies to * and add repository info
               node -e "
                 const fs = require('fs');
+                const path = require('path');
                 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
                 
                 function convertDeps(deps) {
@@ -138,7 +139,7 @@ jobs:
                 pkg.repository = {
                   type: 'git',
                   url: 'https://github.com/ai-primitives/mdxui.git',
-                  directory: dir
+                  directory: process.argv[1]
                 };
                 
                 // Add homepage and bugs URLs
@@ -148,7 +149,7 @@ jobs:
                 };
                 
                 fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
-              "
+              " "$dir"
               
               # Get next version
               NEXT_VERSION=$(get_next_version)
