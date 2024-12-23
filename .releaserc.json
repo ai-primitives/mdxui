@@ -15,16 +15,11 @@
         {"type": "chore", "release": "patch"}
       ]
     }],
-    ["@semantic-release/release-notes-generator", {
-      "preset": "angular"
-    }],
+    "@semantic-release/release-notes-generator",
     ["@semantic-release/npm", {
-      "pkgRoot": "."
+      "pkgRoot": "packages/*"
     }],
-    ["@semantic-release/github", {
-      "successComment": false,
-      "failComment": false
-    }],
+    "@semantic-release/github",
     "@semantic-release/changelog"
   ],
   "initialVersion": "0.1.0",
