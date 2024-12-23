@@ -39,7 +39,7 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
-      - run: pnpm add -w -D @semantic-release/exec semantic-release
+      - run: pnpm add -w -D semantic-release
       - run: pnpm run build
       - name: Release
         env:
@@ -63,7 +63,31 @@ jobs:
             if [ -f "$dir/package.json" ]; then
               echo "Publishing $dir"
               cd $dir
+              
+              # Convert workspace dependencies to * before running semantic-release
+              node -e "
+                const fs = require('fs');
+                const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+                
+                function convertDeps(deps) {
+                  if (!deps) return {};
+                  return Object.fromEntries(
+                    Object.entries(deps).map(([key, value]) => [
+                      key,
+                      value.startsWith('workspace:') ? '*' : value
+                    ])
+                  );
+                }
+                
+                pkg.dependencies = convertDeps(pkg.dependencies);
+                pkg.devDependencies = convertDeps(pkg.devDependencies);
+                
+                fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+              "
+              
+              # Run semantic-release
               npx semantic-release
+              
               cd ../..
             fi
           done
