@@ -18,9 +18,10 @@
     ["@semantic-release/release-notes-generator", {
       "preset": "angular"
     }],
-    ["@semantic-release/npm", {
-      "pkgRoot": "packages/*"
+    ["@semantic-release/exec", {
+      "prepareCmd": "node -e \"const fs=require('fs');const p=require('./package.json');const convert=d=>Object.fromEntries(Object.entries(d||{}).map(([k,v])=>[k,v.startsWith('workspace:')?'*':v]));p.dependencies=convert(p.dependencies);p.devDependencies=convert(p.devDependencies);fs.writeFileSync('./package.json',JSON.stringify(p,null,2));\" && npm version ${nextRelease.version} --no-git-tag-version"
     }],
+    "@semantic-release/npm",
     ["@semantic-release/github", {
       "successComment": false,
       "failComment": false
