@@ -1,0 +1,6 @@
+name = "ai-primitives-api"
+main = "src/index.ts"
+compatibility_date = "2024-02-01"
+
+[build]
+command = "pnpm run build"
