@@ -2,25 +2,89 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modern TypeScript monorepo template with pnpm workspaces, Turborepo, and shared configurations.
+A collection of React/JSX components and layouts for MDX with YAML-LD frontmatter type support. MDXUI enables rapid development of type-driven documentation, blogs, marketing sites, and application dashboards.
 
-## Features
+## Packages
 
-- 🏗️ pnpm workspaces for package management
-- 🚀 Turborepo for build orchestration
-- 📦 Example package with TypeScript and Vitest
-- 🔧 Shared ESLint and TypeScript configurations
-- 🎨 Prettier for consistent code formatting
-- 🔄 GitHub Actions for CI/CD
+- `@mdxui/types` - Core TypeScript types extending schema-dts to support `$type` alongside `@type`
+- `@mdxui/layouts` - Flexible layouts for documentation, blogs, directories, marketing sites, and application dashboards
+- `@mdxui/components` - Shared base components for common use cases
+- `@mdxui/shadcn` - Shared shadcn/ui component implementations
+- `@mdxui/tremor` - Shared Tremor chart and visualization components
+
+### Use Case Specific Packages
+
+- `@mdxui/blog` - Blog-specific layouts and components
+- `@mdxui/directory` - Directory and listing page components
+- `@mdxui/docs` - Documentation site layouts and components
+- `@mdxui/marketing` - Landing page and marketing site components
+- `@mdxui/dashboard` - Application dashboard shells and components
+
+### Widgets
+
+- `@mdxui/widgets` - Interactive components including:
+  - Chat
+  - Editor
+  - SearchBox
+  - CommandBar
+  - SearchList
 
 ## Getting Started
 
 ```bash
-# Clone the template
-gh repo clone ai-primitives/workspace-template my-workspace
+# Install core packages
+pnpm add @mdxui/types @mdxui/layouts @mdxui/components
 
+# Install use case specific packages
+pnpm add @mdxui/blog  # For blog sites
+pnpm add @mdxui/docs  # For documentation
+pnpm add @mdxui/dashboard  # For application dashboards
+```
+
+## Usage Example
+
+```tsx
+import { BlogLayout } from '@mdxui/blog'
+import { SearchBox } from '@mdxui/widgets'
+
+// Your MDX file with YAML-LD frontmatter
+---
+$type: BlogPost
+title: Getting Started with MDXUI
+date: 2024-03-20
+---
+
+export default function Post({ children }) {
+  return (
+    <BlogLayout>
+      <SearchBox />
+      {children}
+    </BlogLayout>
+  )
+}
+```
+
+## Workspace Structure
+
+```
+.
+├── packages/
+│   ├── types/        # Core TypeScript types
+│   ├── layouts/      # Layout components
+│   ├── components/   # Shared components
+│   ├── blog/         # Blog-specific components
+│   ├── docs/         # Documentation components
+│   └── widgets/      # Interactive widgets
+├── apps/
+│   └── web/          # Demo site
+├── config/           # Shared configurations
+└── turbo.json
+```
+
+## Development
+
+```bash
 # Install dependencies
-cd my-workspace
 pnpm install
 
 # Build all packages
@@ -29,68 +93,35 @@ pnpm build
 # Run tests
 pnpm test
 
-# Lint code
-pnpm lint
-```
-
-## Workspace Structure
-
-```
-.
-├── packages/           # Package implementations
-│   ├── api/           # Cloudflare Worker API
-│   └── example-package/
-├── sites/             # Frontend applications
-├── utilities/         # Shared configurations
-│   ├── eslint-config/
-│   ├── prettier-config/
-│   └── tsconfig/
-├── pnpm-workspace.yaml
-└── turbo.json
-```
-
-## Development Workflow
-
-```bash
-# Create a new package
-mkdir packages/my-package
-cd packages/my-package
-
 # Start development
 pnpm dev
-
-# Run tests in watch mode
-pnpm test:watch
 ```
 
-## API Package
+## Key Features
 
-The `@ai-primitives/api` package provides a Cloudflare Worker API using itty-router:
-
-```typescript
-// Example usage
-fetch('https://your-worker.workers.dev/') // Returns 'Success!'
-```
-
-### Endpoints
-
-- `GET /` - Returns 'Success!' message
+- 🎯 Type-driven development with YAML-LD frontmatter
+- 📱 Responsive layouts for various use cases
+- 🎨 Customizable theming and styling
+- ⚡️ High-performance React components
+- 🔍 Built-in search and navigation widgets
+- 📝 Rich text editing capabilities
+- 🎛️ Interactive dashboard components
 
 ## Contributing
 
-Please read our [Contributing Guide](./CONTRIBUTING.md) to learn about our development process and how to propose bugfixes and improvements.
+Please read our [Contributing Guide](./CONTRIBUTING.md) to learn about our development process and how to propose improvements.
 
 ## License
 
-MIT © [AI Primitives](https://mdx.org.ai)
+MIT © 2024 [Drivly](https://driv.ly)
 
-## Dependencies
+## Tech Stack
 
-This workspace uses the following key dependencies:
-
-- pnpm for package management
-- Turborepo for build orchestration
-- TypeScript for static typing
-- Vitest for testing
-- ESLint for linting
-- Prettier for code formatting
+- React/Next.js
+- TypeScript
+- MDX
+- MDX-LD
+- shadcn/ui
+- Tremor
+- Turborepo
+- pnpm workspaces
