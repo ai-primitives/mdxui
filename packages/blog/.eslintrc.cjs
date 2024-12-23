@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    '@workspace/eslint-config',
+    '@mdxui/eslint-config',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended'
   ],
