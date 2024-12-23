@@ -58,13 +58,58 @@ jobs:
           always-auth=true
           EOF
           
+          # Function to get next version using semantic-release
+          get_next_version() {
+            npx semantic-release --dry-run | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || echo "none"
+          }
+          
+          # Create semantic-release config
+          create_release_config() {
+            cat << EOF > .releaserc.json
+          {
+            "branches": ["main"],
+            "plugins": [
+              ["@semantic-release/commit-analyzer", {
+                "releaseRules": [
+                  {"type": "feat", "release": "patch"},
+                  {"type": "fix", "release": "patch"},
+                  {"type": "docs", "release": "patch"},
+                  {"type": "style", "release": "patch"},
+                  {"type": "refactor", "release": "patch"},
+                  {"type": "perf", "release": "patch"},
+                  {"type": "test", "release": "patch"},
+                  {"type": "build", "release": "patch"},
+                  {"type": "ci", "release": "patch"},
+                  {"type": "chore", "release": "patch"}
+                ]
+              }],
+              ["@semantic-release/release-notes-generator", {
+                "preset": "angular"
+              }],
+              ["@semantic-release/github", {
+                "successComment": false,
+                "failComment": false
+              }],
+              "@semantic-release/changelog"
+            ],
+            "tagFormat": "v\${version}",
+            "dryRun": false,
+            "ci": true,
+            "debug": true
+          }
+          EOF
+          }
+          
           # Process each package
           for dir in packages/*; do
             if [ -f "$dir/package.json" ]; then
-              echo "Publishing $dir"
+              echo "Processing $dir"
               cd $dir
               
-              # Convert workspace dependencies to * before running semantic-release
+              # Create semantic-release config for this package
+              create_release_config
+              
+              # Convert workspace dependencies to * before versioning
               node -e "
                 const fs = require('fs');
                 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
@@ -85,8 +130,28 @@ jobs:
                 fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
               "
               
-              # Run semantic-release
-              npx semantic-release
+              # Get next version
+              NEXT_VERSION=$(get_next_version)
+              
+              if [ "$NEXT_VERSION" != "none" ]; then
+                echo "Publishing version $NEXT_VERSION"
+                
+                # Update version in package.json
+                node -e "
+                  const fs = require('fs');
+                  const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+                  pkg.version = '$NEXT_VERSION';
+                  fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+                "
+                
+                # Publish using pnpm
+                pnpm publish --no-git-checks --access public
+                
+                # Create GitHub release using semantic-release
+                GITHUB_TOKEN=$GITHUB_TOKEN npx semantic-release --no-ci
+              else
+                echo "No new version to publish"
+              fi
               
               cd ../..
             fi
