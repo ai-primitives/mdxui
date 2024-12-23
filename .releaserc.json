@@ -19,7 +19,8 @@
       "preset": "angular"
     }],
     ["@semantic-release/npm", {
-      "pkgRoot": "packages/*"
+      "pkgRoot": "packages/*",
+      "convertWorkspacePackageToLatest": true
     }],
     ["@semantic-release/github", {
       "successComment": false,
