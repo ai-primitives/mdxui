@@ -116,7 +116,7 @@ jobs:
               # Create semantic-release config for this package
               create_release_config
               
-              # Convert workspace dependencies to * before versioning
+              # Convert workspace dependencies to * and add repository info
               node -e "
                 const fs = require('fs');
                 const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
@@ -133,6 +133,19 @@ jobs:
                 
                 pkg.dependencies = convertDeps(pkg.dependencies);
                 pkg.devDependencies = convertDeps(pkg.devDependencies);
+                
+                // Add repository information
+                pkg.repository = {
+                  type: 'git',
+                  url: 'https://github.com/ai-primitives/mdxui.git',
+                  directory: dir
+                };
+                
+                // Add homepage and bugs URLs
+                pkg.homepage = 'https://github.com/ai-primitives/mdxui#readme';
+                pkg.bugs = {
+                  url: 'https://github.com/ai-primitives/mdxui/issues'
+                };
                 
                 fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
               "
