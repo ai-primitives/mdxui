@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Button } from '@repo/example-ui'
+import { Button } from '@mdxui/shared'
 
 export default function Home() {
   return (

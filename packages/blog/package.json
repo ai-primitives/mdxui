@@ -24,7 +24,6 @@
     "layouts"
   ],
   "dependencies": {
-    "@mdxui/types": "workspace:*",
     "@mdxui/shared": "workspace:*",
     "date-fns": "^2.30.0",
     "reading-time": "^1.5.0"
@@ -35,6 +34,9 @@
     "next": "^14.0.0"
   },
   "devDependencies": {
+    "@mdxui/eslint-config": "workspace:*",
+    "@mdxui/typescript-config": "workspace:*",
+    "@mdxui/types": "workspace:*",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "tsup": "^8.0.0",

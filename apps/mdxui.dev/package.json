@@ -1,5 +1,5 @@
 {
-  "name": "@repo/web",
+  "name": "@mdxui/web",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -11,14 +11,15 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@repo/example-ui": "workspace:*",
+    "@mdxui/shared": "workspace:*",
+    "@mdxui/types": "workspace:*",
     "next": "^15.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@mdxui/eslint-config": "workspace:*",
+    "@mdxui/typescript-config": "workspace:*",
     "@types/node": "^20",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
