@@ -5,6 +5,12 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+  id-token: write
+  issues: write
+  pull-requests: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -56,6 +62,7 @@ jobs:
           //registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}
           registry=https://registry.npmjs.org/
           always-auth=true
+          provenance=true
           EOF
           
           # Function to get next version using semantic-release
@@ -145,7 +152,7 @@ jobs:
                 "
                 
                 # Publish using pnpm
-                pnpm publish --no-git-checks --access public
+                pnpm publish --provenance --no-git-checks --access public
                 
                 # Create GitHub release using semantic-release
                 GITHUB_TOKEN=$GITHUB_TOKEN npx semantic-release --no-ci
