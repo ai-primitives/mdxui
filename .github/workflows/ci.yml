@@ -57,12 +57,55 @@ jobs:
           always-auth=true
           EOF
           
-          # Run semantic-release for each package
+          # Function to convert workspace dependencies
+          convert_workspace_deps() {
+            local pkg_file="$1"
+            # Create a temporary file for the modified package.json
+            local tmp_file=$(mktemp)
+            
+            # Use node to convert workspace dependencies to *
+            node -e "
+              const fs = require('fs');
+              const pkg = JSON.parse(fs.readFileSync('$pkg_file', 'utf8'));
+              
+              function convertDeps(deps) {
+                if (!deps) return {};
+                return Object.fromEntries(
+                  Object.entries(deps).map(([key, value]) => [
+                    key,
+                    value.startsWith('workspace:') ? '*' : value
+                  ])
+                );
+              }
+              
+              pkg.dependencies = convertDeps(pkg.dependencies);
+              pkg.devDependencies = convertDeps(pkg.devDependencies);
+              
+              fs.writeFileSync('$tmp_file', JSON.stringify(pkg, null, 2));
+            "
+            
+            # Replace the original package.json with the modified one
+            mv "$tmp_file" "$pkg_file"
+          }
+          
+          # Process each package
           for dir in packages/*; do
             if [ -f "$dir/package.json" ]; then
-              echo "Publishing $dir"
+              echo "Processing $dir"
               cd $dir
+              
+              # Backup original package.json
+              cp package.json package.json.bak
+              
+              # Convert workspace dependencies
+              convert_workspace_deps "package.json"
+              
+              # Run semantic-release
               npx semantic-release
+              
+              # Restore original package.json
+              mv package.json.bak package.json
+              
               cd ../..
             fi
           done
