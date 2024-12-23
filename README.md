@@ -7,8 +7,7 @@ A collection of React/JSX components and layouts for MDX with YAML-LD frontmatte
 ## Packages
 
 - `@mdxui/types` - Core TypeScript types extending schema-dts to support `$type` alongside `@type`
-- `@mdxui/layouts` - Flexible layouts for documentation, blogs, directories, marketing sites, and application dashboards
-- `@mdxui/components` - Shared base components for common use cases
+- `@mdxui/shared` - Shared components, layouts, libraries, hooks, configurations and utilities
 - `@mdxui/shadcn` - Shared shadcn/ui component implementations
 - `@mdxui/tremor` - Shared Tremor chart and visualization components
 

@@ -1,0 +1,40 @@
+{
+  "name": "@mdxui/types",
+  "version": "0.1.0",
+  "description": "Core TypeScript types extending schema-dts for MDXUI",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --target=esnext",
+    "dev": "tsup src/index.ts --format esm --dts --watch --target=esnext",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts*"
+  },
+  "keywords": [
+    "mdx",
+    "typescript",
+    "schema",
+    "yaml-ld",
+    "types"
+  ],
+  "dependencies": {
+    "schema-dts": "^1.1.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}
