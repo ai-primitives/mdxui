@@ -19,7 +19,7 @@
       "preset": "angular"
     }],
     ["@semantic-release/npm", {
-      "pkgRoot": "."
+      "pkgRoot": "packages/*"
     }],
     ["@semantic-release/github", {
       "successComment": false,
