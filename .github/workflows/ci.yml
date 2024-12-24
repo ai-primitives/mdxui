@@ -67,11 +67,13 @@ jobs:
           
           # Function to get next version using semantic-release
           get_next_version() {
+            local pkg_name=$1
             npx semantic-release --dry-run | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || echo "none"
           }
           
           # Create semantic-release config
           create_release_config() {
+            local pkg_name=$1
             cat << EOF > .releaserc.json
           {
             "branches": ["main"],
@@ -99,7 +101,7 @@ jobs:
               }],
               "@semantic-release/changelog"
             ],
-            "tagFormat": "v\${version}",
+            "tagFormat": "$pkg_name@v\${version}",
             "dryRun": false,
             "ci": true,
             "debug": true
@@ -113,8 +115,11 @@ jobs:
               echo "Processing $dir"
               cd $dir
               
+              # Get package name from package.json
+              PKG_NAME=$(node -p "require('./package.json').name")
+              
               # Create semantic-release config for this package
-              create_release_config
+              create_release_config "$PKG_NAME"
               
               # Convert workspace dependencies to * and add repository info
               node -e "
@@ -152,7 +157,7 @@ jobs:
               " "$dir"
               
               # Get next version
-              NEXT_VERSION=$(get_next_version)
+              NEXT_VERSION=$(get_next_version "$PKG_NAME")
               
               if [ "$NEXT_VERSION" != "none" ]; then
                 echo "Publishing version $NEXT_VERSION"
