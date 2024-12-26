@@ -1,4 +1,3 @@
-# Template for package-specific semantic-release configurations
 {
   "branches": ["main"],
   "plugins": [
