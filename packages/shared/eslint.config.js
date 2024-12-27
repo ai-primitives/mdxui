@@ -1,2 +1,3 @@
-import baseConfig from '@mdxui/eslint-config'
-export default baseConfig
+import config from '../../config/eslint/index.js'
+
+export default config

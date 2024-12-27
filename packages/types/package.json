@@ -14,7 +14,8 @@
     "dev": "tsup src/index.ts --format esm --dts --watch --target=esnext",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src/**/*.ts*"
+    "lint": "eslint src/**/*.ts*",
+    "test": "vitest"
   },
   "keywords": [
     "mdx",

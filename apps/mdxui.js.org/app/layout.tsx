@@ -27,7 +27,7 @@ export const metadata = {
   },
 }
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children }: any) {
   const navbar = (
     <Navbar
       logo={

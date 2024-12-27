@@ -27,9 +27,9 @@ export interface BaseYamlLD {
 }
 
 // Person type
-export interface Person extends Omit<WithContext<SchemaPerson>, '@type'> {
+export interface Person extends Omit<SchemaPerson, '@type'> {
   $type: 'Person'
-  '@type'?: 'Person'
+  '@type': 'Person'
   name: string
   email?: string
   url?: string
@@ -39,9 +39,9 @@ export interface Person extends Omit<WithContext<SchemaPerson>, '@type'> {
 }
 
 // Organization type
-export interface Organization extends Omit<WithContext<SchemaOrganization>, '@type'> {
+export interface Organization extends Omit<SchemaOrganization, '@type'> {
   $type: 'Organization'
-  '@type'?: 'Organization'
+  '@type': 'Organization'
   name: string
   url?: string
   logo?: string
