@@ -1,11 +1,5 @@
 {
   "extends": "@mdxui/typescript-config/react-library.json",
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"],
-  "compilerOptions": {
-    "outDir": "./dist",
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "moduleResolution": "bundler"
-  }
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
