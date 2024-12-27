@@ -56,7 +56,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          PRE_RELEASE_HOOK: "node scripts/prepare-publish.js"
         run: |
+          # Initial workspace dependency conversion
           node scripts/prepare-publish.js
-          npx multi-semantic-release --pre-release-hook="$PRE_RELEASE_HOOK"
+          
+          # Run multi-semantic-release with prepare hooks
+          npx multi-semantic-release \
+            --pre-release-hook="node scripts/prepare-publish.js" \
+            --pre-prepare-hook="node scripts/post-prepare-publish.js" || true
+          
+          # Final workspace dependency check and conversion
+          node scripts/post-prepare-publish.js
+          
+          # Resume multi-semantic-release to complete the release with converted dependencies
+          npx multi-semantic-release --resume
