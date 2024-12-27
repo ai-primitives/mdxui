@@ -34,6 +34,11 @@
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.0.0"
   },
+  "devDependencies": {
+    "@mdxui/typescript-config": "workspace:*",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
