@@ -1,20 +1,5 @@
 {
-  "extends": "@mdxui/typescript-config/nextjs.json",
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "isolatedModules": true
-  },
-  "include": [
-    "next-env.d.ts",
-    ".next/types/**/*.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "extends": "../../config/typescript/nextjs.json",
+  "include": ["next-env.d.ts", "app", "src"],
+  "exclude": ["node_modules", ".next", "dist"]
 }
