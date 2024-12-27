@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mdxui.dev'),
+  // metadataBase: new URL('https://mdxui.dev'),
   title: {
     default: 'MDXUI',
     template: '%s | MDXUI'
