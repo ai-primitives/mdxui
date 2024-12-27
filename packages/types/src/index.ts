@@ -6,9 +6,7 @@ import type {
   TechArticle as SchemaTechArticle,
   Person as SchemaPerson,
   Organization as SchemaOrganization,
-  WithContext,
-  PersonLeaf,
-  OrganizationLeaf
+  WithContext
 } from 'schema-dts'
 
 // Base type for all YAML-LD frontmatter
@@ -29,7 +27,7 @@ export interface BaseYamlLD {
 }
 
 // Person type
-export interface Person extends Omit<PersonLeaf, '@type'> {
+export interface Person extends Omit<SchemaPerson, '@type'> {
   $type: 'Person'
   '@type': 'Person'
   name: string
@@ -41,7 +39,7 @@ export interface Person extends Omit<PersonLeaf, '@type'> {
 }
 
 // Organization type
-export interface Organization extends Omit<OrganizationLeaf, '@type'> {
+export interface Organization extends Omit<SchemaOrganization, '@type'> {
   $type: 'Organization'
   '@type': 'Organization'
   name: string
