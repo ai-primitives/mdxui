@@ -11,8 +11,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@mdxui/shared": "workspace:*",
-    "@mdxui/types": "workspace:*",
+    "@mdxui/shared": "0.1.0",
+    "@mdxui/types": "0.1.0",
     "ai-functions": "^0.3.0",
     "mdxld": "^1.0.1",
     "next": "^15.1.0",
