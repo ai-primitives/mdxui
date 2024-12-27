@@ -1,13 +1,14 @@
 {
   "name": "@mdxui/typescript-config",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
+  "main": "base.json",
   "files": [
     "base.json",
     "react-library.json",
     "nextjs.json"
   ],
-  "publishConfig": {
-    "access": "public"
+  "dependencies": {
+    "typescript": "^5.5.4"
   }
 }
