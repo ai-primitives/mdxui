@@ -4,28 +4,32 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next --turbopack",
     "build": "next build",
+    "dev": "next --turbopack",
+    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern '.next/*' --ignore-pattern 'node_modules/*' --ignore-pattern 'dist/*'",
-    "check-types": "tsc --noEmit"
+    "format": "prettier --write ."
   },
   "dependencies": {
-    "@mdxui/shared": "workspace:*",
-    "@mdxui/types": "workspace:*",
+    "@mdxui/shared": "^0.1.0",
+    "@mdxui/types": "^0.1.0",
+    "@theguild/remark-mermaid": "^0.2.0",
     "ai-functions": "^0.3.0",
     "mdxld": "^1.0.1",
     "next": "^15.0.2",
     "nextra": "^4.0.0-app-router.34",
     "nextra-theme-docs": "^4.0.0-app-router.34",
     "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react-dom": "18.3.1",
+    "react-icons": "^5.4.0"
   },
   "devDependencies": {
-    "@mdxui/eslint-config": "workspace:*",
-    "@mdxui/typescript-config": "workspace:*",
+    "@mdxui/eslint-config": "^0.1.0",
+    "@mdxui/typescript-config": "^0.1.0",
     "@types/node": "^22.10.2",
     "@types/react": "19.0.2",
+    "pagefind": "^1.1.1",
+    "prettier": "^3.4.2",
     "typescript": "5.5.4"
   }
 }
