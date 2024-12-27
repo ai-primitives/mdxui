@@ -1,5 +1,4 @@
-import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
-import type { Components } from '@mdx-js/react'
+import { useMDXComponents as getDocsMDXComponents, type Components } from 'nextra-theme-docs'
 
 const docsComponents = getDocsMDXComponents()
 

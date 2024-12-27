@@ -5,10 +5,15 @@ const withNextra = nextra({
   search: {
     codeblocks: false,
   },
-  // contentDirBasePath: '/docs',
   contentDirBasePath: '/',
 })
 
-export default withNextra({
+/** @type {import('next').NextConfig} */
+const config = {
   reactStrictMode: true,
-})
+  images: {
+    domains: ['mdxui.js.org'],
+  },
+}
+
+export default withNextra(config) 
