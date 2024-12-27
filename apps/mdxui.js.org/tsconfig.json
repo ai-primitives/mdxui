@@ -1,5 +1,14 @@
 {
   "extends": "../../config/typescript/nextjs.json",
-  "include": ["next-env.d.ts", "app", "src"],
-  "exclude": ["node_modules", ".next", "dist"]
+  "include": [
+    "app",
+    "next-env.d.ts",
+    "src",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist"
+  ]
 }
