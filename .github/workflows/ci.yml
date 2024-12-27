@@ -4,12 +4,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened]
 
 permissions:
-  contents: write
-  id-token: write
-  issues: write
+  contents: read
   pull-requests: write
+  checks: write
+  actions: write
 
 jobs:
   test:
@@ -24,14 +25,19 @@ jobs:
           node-version: '20.x'
           cache: 'pnpm'
       - run: pnpm install
-      - run: pnpm run build
-      - run: pnpm run test
+      - name: Build types package
+        run: pnpm run build:types
+      - name: Build all packages
+        run: pnpm run build:packages
       - run: pnpm run lint
 
   release:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,162 +51,10 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
-      - run: pnpm add -w -D semantic-release
       - run: pnpm run build
+      - run: pnpm run prepare
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: true
-        run: |
-          # Configure git for semantic-release
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-          
-          # Create .npmrc for publishing
-          cat << EOF > .npmrc
-          //registry.npmjs.org/:_authToken=\${NODE_AUTH_TOKEN}
-          registry=https://registry.npmjs.org/
-          always-auth=true
-          provenance=true
-          EOF
-          
-          # Function to get next version using semantic-release
-          get_next_version() {
-            local pkg_name=$1
-            local pkg_path=$2
-            
-            # Check if package exists in npm registry
-            if ! npm view "$pkg_name" version &> /dev/null; then
-              echo "1.0.0"
-              return
-            fi
-            
-            # Get the next version from semantic-release
-            local next_version=$(npx semantic-release --dry-run | grep -oP "The next release version is \K[0-9]+\.[0-9]+\.[0-9]+" || echo "none")
-            
-            if [ "$next_version" = "none" ]; then
-              # If no new version, get current version and increment patch
-              local current_version=$(npm view "$pkg_name" version)
-              if [ -n "$current_version" ]; then
-                # Split version into parts
-                local major=$(echo "$current_version" | cut -d. -f1)
-                local minor=$(echo "$current_version" | cut -d. -f2)
-                local patch=$(echo "$current_version" | cut -d. -f3)
-                # Increment patch
-                patch=$((patch + 1))
-                echo "$major.$minor.$patch"
-              else
-                echo "1.0.0"
-              fi
-            else
-              echo "$next_version"
-            fi
-          }
-          
-          # Create semantic-release config
-          create_release_config() {
-            local pkg_name=$1
-            cat << EOF > .releaserc.json
-          {
-            "branches": ["main"],
-            "plugins": [
-              ["@semantic-release/commit-analyzer", {
-                "releaseRules": [
-                  {"type": "feat", "release": "patch"},
-                  {"type": "fix", "release": "patch"},
-                  {"type": "docs", "release": "patch"},
-                  {"type": "style", "release": "patch"},
-                  {"type": "refactor", "release": "patch"},
-                  {"type": "perf", "release": "patch"},
-                  {"type": "test", "release": "patch"},
-                  {"type": "build", "release": "patch"},
-                  {"type": "ci", "release": "patch"},
-                  {"type": "chore", "release": "patch"}
-                ]
-              }],
-              ["@semantic-release/release-notes-generator", {
-                "preset": "angular"
-              }],
-              ["@semantic-release/github", {
-                "successComment": false,
-                "failComment": false
-              }],
-              "@semantic-release/changelog"
-            ],
-            "tagFormat": "$pkg_name@v\${version}",
-            "ci": true,
-            "debug": true
-          }
-          EOF
-          }
-          
-          # Process each package
-          for dir in packages/*; do
-            if [ -f "$dir/package.json" ]; then
-              echo "Processing $dir"
-              cd $dir
-              
-              # Get package name from package.json
-              PKG_NAME=$(node -p "require('./package.json').name")
-              
-              # Create semantic-release config for this package
-              create_release_config "$PKG_NAME"
-              
-              # Convert workspace dependencies to * and add repository info
-              node -e "
-                const fs = require('fs');
-                const path = require('path');
-                const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-                
-                function convertDeps(deps) {
-                  if (!deps) return {};
-                  return Object.fromEntries(
-                    Object.entries(deps).map(([key, value]) => [
-                      key,
-                      value.startsWith('workspace:') ? '*' : value
-                    ])
-                  );
-                }
-                
-                pkg.dependencies = convertDeps(pkg.dependencies);
-                pkg.devDependencies = convertDeps(pkg.devDependencies);
-                
-                // Add repository information
-                pkg.repository = {
-                  type: 'git',
-                  url: 'https://github.com/ai-primitives/mdxui.git',
-                  directory: process.argv[1]
-                };
-                
-                // Add homepage and bugs URLs
-                pkg.homepage = 'https://github.com/ai-primitives/mdxui#readme';
-                pkg.bugs = {
-                  url: 'https://github.com/ai-primitives/mdxui/issues'
-                };
-                
-                fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
-              " "$dir"
-              
-              # Get next version
-              NEXT_VERSION=$(get_next_version "$PKG_NAME" "$dir")
-              
-              echo "Next version for $PKG_NAME: $NEXT_VERSION"
-              
-              # Update version in package.json
-              node -e "
-                const fs = require('fs');
-                const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-                pkg.version = '$NEXT_VERSION';
-                fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
-              "
-              
-              # Publish using pnpm
-              pnpm publish --provenance --no-git-checks --access public
-              
-              # Create GitHub release
-              GITHUB_TOKEN=$GITHUB_TOKEN npx semantic-release
-              
-              cd ../..
-            fi
-          done
+        run: npx multi-semantic-release

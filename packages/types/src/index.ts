@@ -35,7 +35,7 @@ export interface Person extends Omit<SchemaPerson, '@type'> {
   url?: string
   image?: string
   jobTitle?: string
-  affiliation?: Organization
+  affiliation?: { '@type': 'Organization' } & Omit<Organization, '@type'>
 }
 
 // Organization type
@@ -51,11 +51,11 @@ export interface Organization extends Omit<SchemaOrganization, '@type'> {
 // Blog post type
 export interface BlogPost extends Omit<WithContext<SchemaBlogPost>, '@type'> {
   $type: 'BlogPost'
-  '@type'?: 'BlogPosting'
+  '@type': 'BlogPosting'
   title: string
   description?: string
   content?: string
-  author: Person | Organization
+  author: ({ '@type': 'Person' } & Omit<Person, '@type'>) | ({ '@type': 'Organization' } & Omit<Organization, '@type'>)
   datePublished: string
   dateModified?: string
   image?: string
@@ -104,11 +104,11 @@ export interface Blog extends Omit<WithContext<SchemaBlog>, '@type'> {
 // Article type
 export interface Article extends Omit<WithContext<SchemaArticle>, '@type'> {
   $type: 'Article'
-  '@type'?: 'Article'
+  '@type': 'Article'
   title: string
   description?: string
   content?: string
-  author: Person | Organization
+  author: ({ '@type': 'Person' } & Omit<Person, '@type'>) | ({ '@type': 'Organization' } & Omit<Organization, '@type'>)
   datePublished: string
   dateModified?: string
   image?: string
