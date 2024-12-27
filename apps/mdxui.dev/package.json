@@ -11,6 +11,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@mdx-js/react": "^3.1.0",
     "@mdxui/shared": "workspace:*",
     "@mdxui/types": "workspace:*",
     "@theguild/remark-mermaid": "^0.2.0",
