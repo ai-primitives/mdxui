@@ -2,11 +2,15 @@ import fs from 'fs'
 import path from 'path'
 
 async function convertWorkspaceDependencies() {
+  console.log('Starting workspace dependency conversion...')
   const packagesDir = path.join(process.cwd(), 'packages')
+  console.log('Packages directory:', packagesDir)
   const packages = await fs.promises.readdir(packagesDir)
+  console.log('Found packages:', packages)
 
   for (const pkg of packages) {
     const pkgPath = path.join(packagesDir, pkg, 'package.json')
+    console.log('\nProcessing package:', pkg)
     try {
       const content = await fs.promises.readFile(pkgPath, 'utf8')
       const pkgJson = JSON.parse(content)
@@ -17,10 +21,13 @@ async function convertWorkspaceDependencies() {
 
         for (const [name, version] of Object.entries(pkgJson[depType])) {
           if (version.startsWith('workspace:')) {
+            console.log(`Found workspace dependency: ${name} (${version})`)
             const depPkgPath = path.join(packagesDir, name.replace('@mdxui/', ''), 'package.json')
+            console.log('Resolving dependency path:', depPkgPath)
             const depContent = await fs.promises.readFile(depPkgPath, 'utf8')
             const depPkg = JSON.parse(depContent)
             pkgJson[depType][name] = `^${depPkg.version}`
+            console.log(`Converting ${name} from ${version} to ^${depPkg.version}`)
             modified = true
           }
         }
