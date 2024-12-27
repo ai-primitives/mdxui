@@ -77,7 +77,11 @@ reconvertWorkspaceDependencies()
   .then(hasWorkspaceDeps => {
     if (hasWorkspaceDeps) {
       console.log('Successfully converted all workspace dependencies')
+      // Exit with status 1 if we found and converted workspace deps
+      // This will cause multi-semantic-release to retry the prepare phase
+      process.exit(1)
     }
+    // Exit normally if no workspace deps were found
     process.exit(0)
   })
   .catch(err => {
