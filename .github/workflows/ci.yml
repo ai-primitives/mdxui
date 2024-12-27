@@ -52,7 +52,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
       - run: pnpm run build
-      - run: pnpm run prepare
+      - name: Convert workspace dependencies
+        run: node scripts/prepare-publish.js
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
