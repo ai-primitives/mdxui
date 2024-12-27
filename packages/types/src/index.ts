@@ -55,7 +55,7 @@ export interface BlogPost extends Omit<WithContext<SchemaBlogPost>, '@type'> {
   title: string
   description?: string
   content?: string
-  author: Person | Organization
+  author: { '@type': 'Person' | 'Organization' } & (Person | Organization)
   datePublished: string
   dateModified?: string
   image?: string
@@ -108,7 +108,7 @@ export interface Article extends Omit<WithContext<SchemaArticle>, '@type'> {
   title: string
   description?: string
   content?: string
-  author: Person | Organization
+  author: { '@type': 'Person' | 'Organization' } & (Person | Organization)
   datePublished: string
   dateModified?: string
   image?: string
