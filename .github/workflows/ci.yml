@@ -58,5 +58,14 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           PRE_RELEASE_HOOK: "node scripts/prepare-publish.js"
         run: |
+          # Initial workspace dependency conversion
           node scripts/prepare-publish.js
-          npx multi-semantic-release --pre-release-hook="$PRE_RELEASE_HOOK"
+          
+          # Run multi-semantic-release with pre-release hook
+          npx multi-semantic-release --pre-release-hook="$PRE_RELEASE_HOOK" || true
+          
+          # Run post-prepare script to ensure workspace dependencies are converted
+          node scripts/post-prepare-publish.js
+          
+          # Resume multi-semantic-release to complete the release
+          npx multi-semantic-release --resume
