@@ -2,11 +2,15 @@
   "name": "@mdxui/workspace",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "turbo run build:types && turbo run build",
+    "build:types": "turbo run build:types",
+    "build:packages": "turbo run build:packages",
+    "prepare": "node scripts/prepare-publish.js",
+    "postpublish": "node scripts/restore-workspace.js",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
-    "format": "prettier --write \"**/*.{ts,tsx,md,mdx}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "workspaces": [
     "packages/*",
